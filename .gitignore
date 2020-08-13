@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+
+# Yarn Zero-installs
+# https://yarnpkg.com/advanced/qa/#which-files-should-be-gitignored
+.yarn/*
+!.yarn/cache
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versionss
+
+# Logs
+yarn-debug.log*
+yarn-error.log
+
+# Editors and IDEs
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/settings.json
+
+# Cache
+.eslintcache
+
+# Misc
+.DS_Store
