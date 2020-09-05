@@ -3,18 +3,9 @@ import spawn from "cross-spawn";
 import { Configuration, Project, CommandContext, Plugin } from "@yarnpkg/core";
 import { PortablePath, ppath, xfs } from "@yarnpkg/fslib";
 import { Command, UsageError } from "clipanion";
-
-type Location = {
-  name: PortablePath;
-  source: PortablePath;
-  target: string;
-};
+import { Location } from "./types";
 
 export class PushCommand extends Command<CommandContext> {
-  static usage = Command.Usage({
-    description: "Uploads packages to a cloud storage bucket.",
-  });
-
   @Command.String(`--bucket`)
   bucket: string = process.env.PKG_BUCKET || "";
 
@@ -24,11 +15,26 @@ export class PushCommand extends Command<CommandContext> {
   @Command.Rest()
   files: PortablePath[] = [];
 
+  static usage = Command.Usage({
+    category: "deployment",
+    description: "Uploads application bundle to a cloud storage bucket.",
+    examples: [
+      [
+        `Upload package.zip to gs://pkg.example.com/{pkgName}_123.zip`,
+        `$0 push --bucket=pkg.example.com --version=123 package.zip`,
+      ],
+      [
+        `Upload multiple files`,
+        `$0 push --bucket=pkg.example.com --version=123 one.js two.js`,
+      ],
+    ],
+  });
+
   @Command.Path(`push`)
   async execute(): Promise<number | undefined> {
-    const { cwd, plugins } = this.context;
-    const configuration = await Configuration.find(cwd, plugins);
-    const { workspace } = await Project.find(configuration, this.context.cwd);
+    const { cwd } = this.context;
+    const configuration = await Configuration.find(cwd, null);
+    const { workspace } = await Project.find(configuration, cwd);
 
     if (!this.bucket) {
       throw new UsageError(

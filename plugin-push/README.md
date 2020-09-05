@@ -27,3 +27,6 @@ environment. For example:
 ```bash
 $ gcloud functions deploy api --source=gs://pkg.example.com/api_123.zip
 ```
+
+If no `--bucket` argument was provided, it will attempt to use `PKG_BUCKET`
+environment variable.
