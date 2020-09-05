@@ -1,0 +1,27 @@
+# This workflow will do a clean install of node dependencies, build the source
+# code and run tests. For more information see:
+# https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: PR
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+env:
+  CI: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: yarn install --immutable-cache
+
+      - run: yarn prettier check .
+      - run: yarn eslint .
+      - run: yarn jest
+
+      - run: yarn build

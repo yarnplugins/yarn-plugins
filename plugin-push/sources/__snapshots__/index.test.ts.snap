@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Throws an error when no bucket was provided 1`] = `
+"[31m[1mUsage Error[22m[39m: Need to pass a cloud storage bucket, e.g. --bucket=gs://pkg.example.com
+
+[1m$ [22m...
+"
+`;
