@@ -2,11 +2,11 @@
 
 This is a community maintained repository with various Yarn v2 [plugins](https://yarnpkg.com/features/plugins).
 
-#### :rocket: `plugin-bundle` ([source](./plugin-bundle), [history](../../commits/master/plugin-bundle/bundles/@yarnpkg/plugin-bundle.js))
+#### :rocket: `plugin-bundle` ([source](./plugin-bundle), [history](../../commits/main/plugin-bundle/bundles/@yarnpkg/plugin-bundle.js))
 
-#### :rocket: `plugin-deduplicate` ([source](https://github.com/eps1lon/yarn-plugin-deduplicate), [history](https://github.com/eps1lon/yarn-plugin-deduplicate/commits/master/bundles/@yarnpkg/plugin-deduplicate.js))
+#### :rocket: `plugin-deduplicate` ([source](https://github.com/eps1lon/yarn-plugin-deduplicate), [history](https://github.com/eps1lon/yarn-plugin-deduplicate/commits/latest/bundles/@yarnpkg/plugin-deduplicate.js))
 
-#### :rocket: `plugin-push` ([source](./plugin-push), [history](../../commits/master/plugin-push/bundles/@yarnpkg/plugin-push.js))
+#### :rocket: `plugin-push` ([source](./plugin-push), [history](../../commits/main/plugin-push/bundles/@yarnpkg/plugin-push.js))
 
 ### How to Install
 
