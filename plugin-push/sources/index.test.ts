@@ -5,6 +5,8 @@ import { PassThrough } from "stream";
 import { Cli } from "clipanion";
 import { PushCommand } from ".";
 
+process.env.FORCE_COLOR = "0";
+
 async function run(args: string[] = []) {
   const stream = new PassThrough();
   const cli = Cli.from<CommandContext>([PushCommand]);

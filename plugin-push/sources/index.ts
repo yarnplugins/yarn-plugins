@@ -26,8 +26,8 @@ export class PushCommand extends Command<CommandContext> {
 
   @Command.Path(`push`)
   async execute(): Promise<number | undefined> {
-    const { cwd, plugins } = this.context;
-    const configuration = await Configuration.find(cwd, plugins);
+    const { cwd } = this.context;
+    const configuration = await Configuration.find(cwd, null);
     const { workspace } = await Project.find(configuration, this.context.cwd);
 
     if (!this.bucket) {

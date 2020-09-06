@@ -20,7 +20,7 @@ jobs:
       - uses: actions/checkout@v2
       - run: yarn install --immutable-cache
 
-      - run: yarn prettier check .
+      - run: yarn prettier --check .
       - run: yarn eslint .
       - run: yarn jest
 
