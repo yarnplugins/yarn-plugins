@@ -6,7 +6,7 @@
   "dependencies": {
     "@types/cross-spawn": "^6.0.2",
     "@types/jest": "^26.0.13",
-    "@types/node": "^14.6.4",
+    "@types/node": "^14.10.1",
     "@yarnpkg/builder": "^2.1.1",
     "@yarnpkg/core": "^2.2.2",
     "@yarnpkg/fslib": "^2.2.1",
