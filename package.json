@@ -16,12 +16,12 @@
     "@types/babel__core": "^7.1.9",
     "@types/eslint": "^7.2.2",
     "@types/prettier": "^2.1.0",
-    "@typescript-eslint/eslint-plugin": "^4.0.1",
-    "@typescript-eslint/parser": "^4.0.1",
+    "@typescript-eslint/eslint-plugin": "^4.1.0",
+    "@typescript-eslint/parser": "^4.1.0",
     "@yarnpkg/builder": "^2.1.1",
     "@yarnpkg/pnpify": "^2.2.1",
     "babel-jest": "^26.3.0",
-    "eslint": "^7.8.1",
+    "eslint": "^7.9.0",
     "eslint-config-prettier": "^6.11.0",
     "jest": "^26.4.2",
     "prettier": "^2.1.1",
@@ -29,6 +29,7 @@
   },
   "scripts": {
     "build": "yarn workspaces foreach run build",
-    "test": "jest"
+    "test": "jest",
+    "new": "builder new plugin plugin-$0"
   }
 }

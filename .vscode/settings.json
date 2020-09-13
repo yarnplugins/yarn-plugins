@@ -10,5 +10,14 @@
   "search.exclude": {
     "**/.yarn": true,
     "**/.pnp.*": true
-  }
+  },
+  "cSpell.ignoreWords": [
+    "clipanion",
+    "fslib",
+    "gsutil",
+    "libzip",
+    "ppath",
+    "yarnpkg",
+    "yarnrc"
+  ]
 }

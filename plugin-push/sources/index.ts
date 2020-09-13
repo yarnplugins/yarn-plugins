@@ -1,24 +1,24 @@
 import os from "os";
 import spawn from "cross-spawn";
+import { createRequire, createRequireFromPath } from "module";
 import { Configuration, Project, CommandContext, Plugin } from "@yarnpkg/core";
 import { PortablePath, ppath, xfs } from "@yarnpkg/fslib";
 import { Command, UsageError } from "clipanion";
 
-type Location = {
-  name: PortablePath;
-  source: PortablePath;
-  target: string;
-};
+import { sanitizeBucket, parseSource } from "./utils";
 
 export class PushCommand extends Command<CommandContext> {
   static usage = Command.Usage({
     description: "Uploads packages to a cloud storage bucket.",
   });
 
-  @Command.String(`--bucket`)
-  bucket: string = process.env.PKG_BUCKET || "";
+  @Command.String("-r,--require")
+  require?: string;
 
-  @Command.String(`--version`)
+  @Command.String("--bucket")
+  bucket?: string;
+
+  @Command.String("--version")
   version: string = os.userInfo().username;
 
   @Command.Rest()
@@ -28,7 +28,39 @@ export class PushCommand extends Command<CommandContext> {
   async execute(): Promise<number | undefined> {
     const { cwd } = this.context;
     const configuration = await Configuration.find(cwd, null);
-    const { workspace } = await Project.find(configuration, this.context.cwd);
+    const { project } = await Project.find(configuration, cwd);
+
+    //
+    // Allows to load environment variables from a Node.js module
+    // -------------------------------------------------------------------------
+
+    if (this.require) {
+      const dynamicRequire = (createRequire || createRequireFromPath)(cwd);
+      const topLevelCwd = project.topLevelWorkspace.cwd;
+      const pnpFilenames = ["./.pnp.js", "./.pnp.cjs"];
+
+      if (project.topLevelWorkspace.manifest.type === "module") {
+        pnpFilenames.reverse();
+      }
+
+      for (const pnpFilename of pnpFilenames) {
+        const pnpPath = ppath.resolve(topLevelCwd, pnpFilename as PortablePath);
+        if (await xfs.existsPromise(pnpPath)) {
+          dynamicRequire(pnpPath).setup();
+          break;
+        }
+      }
+
+      dynamicRequire(dynamicRequire.resolve(this.require, { paths: [cwd] }));
+    }
+
+    if (!this.bucket) {
+      this.bucket = process.env.PKG_BUCKET;
+    }
+
+    //
+    // Validates and sanitizes user input
+    // -------------------------------------------------------------------------
 
     if (!this.bucket) {
       throw new UsageError(
@@ -36,53 +68,30 @@ export class PushCommand extends Command<CommandContext> {
       );
     }
 
-    const bucket = this.bucket.includes("://")
-      ? this.bucket.endsWith("/")
-        ? this.bucket
-        : `${this.bucket}/`
-      : this.bucket.endsWith("/")
-      ? `gs://${this.bucket}`
-      : `gs://${this.bucket}/`;
-
-    if (!bucket.startsWith("gs://")) {
-      throw new Error(
-        "Only Google Cloud Storage buckets are supported at this moment.",
-      );
-    }
-
     if (this.files.length === 0) {
       throw new UsageError("Need to pass the list of files.");
     }
 
-    const files: Location[] = [];
+    const bucket = sanitizeBucket(this.bucket);
+
+    //
+    // Uploads source files to a cloud storage bucket
+    // -------------------------------------------------------------------------
 
     for (const file of this.files) {
-      const source = ppath.resolve(file);
-      const exists = await xfs.existsPromise(source);
+      const [source, target] = parseSource(file, this.version);
+      const sourcePath = ppath.resolve(cwd, source as PortablePath);
+      const targetPath = `${bucket}${target}`;
+      const exists = await xfs.existsPromise(sourcePath);
 
       if (!exists) {
         throw new Error(`File not found: ${source}`);
       }
 
-      if (!workspace || !workspace.manifest.name) {
-        throw new Error("Failed to read package.json");
-      }
-
-      const extname = ppath.extname(file);
-      const basename = ppath.basename(file).slice(0, -extname.length);
-      const target =
-        this.files.length === 1
-          ? `${workspace.manifest.name.name}_${this.version}${extname}`
-          : `${workspace.manifest.name.name}_${basename}_${this.version}${extname}`;
-
-      files.push({ name: file, source, target: `${bucket}${target}` });
-    }
-
-    for (const { name, source, target } of files) {
-      this.context.stdout.write(`${name} -> ${target}${os.EOL}`);
+      this.context.stdout.write(`${source} -> ${targetPath}${os.EOL}`);
 
       const exitCode = await new Promise<number>((resolve, reject) => {
-        spawn("gsutil", ["cp", source, target], {
+        spawn("gsutil", ["cp", source, targetPath], {
           cwd: this.context.cwd,
           stdio: [this.context.stdin, this.context.stdout, this.context.stderr],
         })
