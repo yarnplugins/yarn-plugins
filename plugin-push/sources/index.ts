@@ -2,7 +2,7 @@ import os from "os";
 import spawn from "cross-spawn";
 import { createRequire, createRequireFromPath } from "module";
 import { Configuration, Project, CommandContext, Plugin } from "@yarnpkg/core";
-import { PortablePath, ppath, xfs } from "@yarnpkg/fslib";
+import { PortablePath, ppath, npath, xfs } from "@yarnpkg/fslib";
 import { Command, UsageError } from "clipanion";
 
 import { sanitizeBucket, parseSource } from "./utils";
@@ -92,7 +92,7 @@ export class PushCommand extends Command<CommandContext> {
 
       const exitCode = await new Promise<number>((resolve, reject) => {
         spawn("gsutil", ["cp", source, targetPath], {
-          cwd: this.context.cwd,
+          cwd: npath.fromPortablePath(cwd),
           stdio: [this.context.stdin, this.context.stdout, this.context.stderr],
         })
           .on("error", (err: Error) => {
