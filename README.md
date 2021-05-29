@@ -8,6 +8,8 @@ This is a community maintained repository with various Yarn v2 [plugins](https:/
 
 #### :rocket: `plugin-push` ([source](./plugin-push), [history](../../commits/main/plugin-push/bundles/@yarnpkg/plugin-push.js))
 
+#### :rocket: `plugin-echo-execute` ([source](https://github.com/leaumar/yarn-plugin-echo-execute), [history](https://github.com/leaumar/yarn-plugin-echo-execute/commits/master/bundles/%40yarnpkg/plugin-echo-execute.js))
+
 ### How to Install
 
 Ensure that you're using the latest version of Yarn v2 then install any plugin from the list above by running:
