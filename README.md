@@ -36,4 +36,4 @@ Your repo may be merged into this one (like `plugin-bundle`), or may stay separa
 
 yarn-plugins.com works by HTTP-redirecting\* an enduser's Yarn from the site's convenient URLs (`https://yarnplugins.com/x`) to the plugin script file hosted within each repo (`https://raw.githubusercontent.com/user/repo/.../plugin-x.js`). For this reason, you need to be able to permalink your "latest" runnable script. You may be able to achieve this with a build job artifact or release package, but for simpler plugins it might be more proportional to simply commit your artifact next to its sources and use its live repo link.
 
-\*Redirections are managed privately outside this repository. If you're plugin is located outside of this repository, give your permalink to the project maintainer.
+\*Redirections are managed privately outside this repository. If your plugin is located outside of this repository, give your permalink to the project maintainer.
